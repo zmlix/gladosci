@@ -51,7 +51,7 @@ func main() {
 
 	if addUser {
 		admin.AddUserTUI()
-	} else if len(cronStr) > 0 {
+	} else {
 		CronCheckin(cronStr)
 	}
 
