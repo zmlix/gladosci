@@ -12,6 +12,11 @@ import (
 )
 
 func Checkin() {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println(err)
+		}
+	}()
 	conf := admin.GetConfig()
 	appToken := conf.AppToken
 	users := conf.Users
