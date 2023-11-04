@@ -52,7 +52,7 @@ func initialModel() model {
 			t.TextStyle = focusedStyle
 		case 1:
 			t.Placeholder = "Cookie"
-			t.CharLimit = 64
+			t.CharLimit = 4096
 		}
 
 		m.inputs[i] = t
