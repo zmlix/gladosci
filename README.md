@@ -18,4 +18,10 @@ go build .
 
 # 添加签到用户
 ./gladosci -add
+
+# 指定用户进行签到
+# 'all' 全部签到
+# uId 指定uId用户签到
+./gladosci -checkin all
+./gladosci -checkin xxxxxxxxxxx
 ```
