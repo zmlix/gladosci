@@ -17,7 +17,7 @@ func GetCheckinInfo(s CheckinJson) string {
 	msg := s.Message
 
 	if len(s.List) == 0 {
-		return fmt.Sprintf("签到结果: %v", msg)
+		return fmt.Sprintf("<span>签到结果: %v</span><br/>", msg)
 	}
 
 	date := strings.Split(s.List[0].Business, ":")[2]
@@ -27,17 +27,18 @@ func GetCheckinInfo(s CheckinJson) string {
 }
 
 func CheckinOneUser(cookie string) string {
-	status, err := GetStatusResp(StatusUrl, cookie)
-	if err != nil {
-		log.Println(err)
-		return fmt.Sprintf("%v", err.Error())
-	}
 	checkin, err := GetCheckinResp(CheckinUrl, cookie)
 	if err != nil {
-		log.Println(err)
-		return fmt.Sprintf("%v", err.Error())
+		log.Println("GetCheckinResp", err)
+		return fmt.Sprintf("<span>GetCheckinResp %v</span>", err.Error())
+	}
+	checkinStr := GetCheckinInfo(checkin)
+
+	status, err := GetStatusResp(StatusUrl, cookie)
+	if err != nil {
+		log.Println("GetStatusResp", err)
+		return checkinStr + fmt.Sprintf("<span>GetStatusResp %v</span>", err.Error())
 	}
 	statusStr := GetStatusInfo(status)
-	checkinStr := GetCheckinInfo(checkin)
 	return checkinStr + statusStr
 }

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -58,6 +59,23 @@ type CheckinJson struct {
 }
 
 func GetStatusResp(url, cookie string) (StatusJson, error) {
+
+	retry := 3
+	sj, err := getStatusResp(url, cookie)
+	for err != nil {
+		log.Println("GetStatusResp Retry...")
+		time.Sleep(10 * time.Second)
+		retry -= 1
+		sj, err = getStatusResp(url, cookie)
+		if retry == 0 {
+			break
+		}
+	}
+
+	return sj, err
+}
+
+func getStatusResp(url, cookie string) (StatusJson, error) {
 	client := &http.Client{}
 	data := StatusJson{}
 	req, err := http.NewRequest("GET", url, nil)
@@ -82,7 +100,7 @@ func GetStatusResp(url, cookie string) (StatusJson, error) {
 		return data, fmt.Errorf("读取请求结果失败: %w", err)
 	}
 
-	// fmt.Println(data)
+	log.Println(data)
 	if data.Code != 0 {
 		return data, errors.New("Cookie 已过期")
 	}
@@ -90,6 +108,23 @@ func GetStatusResp(url, cookie string) (StatusJson, error) {
 }
 
 func GetCheckinResp(url, cookie string) (CheckinJson, error) {
+
+	retry := 3
+	cj, err := getCheckinResp(url, cookie)
+	for err != nil {
+		log.Println("GetCheckinResp Retry...")
+		time.Sleep(10 * time.Second)
+		retry -= 1
+		cj, err = getCheckinResp(url, cookie)
+		if retry == 0 {
+			break
+		}
+	}
+
+	return cj, err
+}
+
+func getCheckinResp(url, cookie string) (CheckinJson, error) {
 	client := &http.Client{}
 	data := CheckinJson{}
 	var body struct {
@@ -123,6 +158,6 @@ func GetCheckinResp(url, cookie string) (CheckinJson, error) {
 		return data, fmt.Errorf("读取请求结果失败: %w", err)
 	}
 
-	// fmt.Println(data)
+	log.Println(data)
 	return data, nil
 }
